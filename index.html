@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://docs.google.com https://*.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chỉ mục tạp chí Xây dựng - Giao thông Việt Nam</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --asphalt:#23272b; --asphalt2:#30353a; --lane:#e8b820; --sign:#1b4f8a; --sign-ink:#fff;
+  --bg:#eef0f1; --paper:#ffffff; --ink:#1d2125; --muted:#5d656d; --line:#d6dadd;
+  --ok:#2f7d4f; --warn:#b5651d;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#16191c; --paper:#1f2327; --ink:#e7eaec; --muted:#9aa3ab; --line:#343a40; --sign:#6ea6e6; --sign-ink:#0f1a26;
+}}
+:root[data-theme="dark"]{ --bg:#16191c; --paper:#1f2327; --ink:#e7eaec; --muted:#9aa3ab; --line:#343a40; --sign:#6ea6e6; --sign-ink:#0f1a26; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;font-size:15px;line-height:1.5}
+header{background:var(--asphalt);color:#f3f4f5;padding:28px 20px 0}
+.wrap{max-width:1180px;margin:0 auto}
+h1{font-weight:800;font-size:clamp(24px,3.4vw,36px);line-height:1.15;margin:0 0 6px;letter-spacing:-.01em}
+.sub{color:#b9c0c6;margin:0 0 20px;max-width:70ch}
+.lane{height:6px;background:repeating-linear-gradient(90deg,var(--lane) 0 46px,transparent 46px 78px);margin-top:22px}
+.searchbar{display:flex;gap:10px;flex-wrap:wrap}
+.searchbar input{flex:1 1 320px;font:inherit;font-size:16px;padding:12px 14px;border-radius:6px;border:2px solid transparent;background:#fff;color:#1d2125}
+.searchbar input:focus{outline:none;border-color:var(--lane)}
+.searchbar select{font:inherit;padding:12px 10px;border-radius:6px;border:0;background:var(--asphalt2);color:#f3f4f5}
+main{padding:18px 20px 40px}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:14px}
+.chip{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--paper);color:var(--ink);padding:6px 12px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--asphalt);color:#fff;border-color:var(--asphalt)}
+.chip:focus-visible,.btn:focus-visible,a:focus-visible,summary:focus-visible{outline:3px solid var(--lane);outline-offset:2px}
+.meta{margin-left:auto;color:var(--muted);font-size:13px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.src{display:inline-flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--warn)}
+.dot.on{background:var(--ok)}
+.list{background:var(--paper);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.row{display:grid;grid-template-columns:72px 1fr 210px;gap:16px;padding:16px 18px;border-top:1px solid var(--line);align-items:start}
+.row:first-child{border-top:0}
+.code{font-weight:600;color:var(--muted);font-size:13px;padding-top:3px}
+.title{font-weight:600;font-size:16.5px;margin:0}
+.en{color:var(--muted);font-style:italic;font-size:13.5px;margin:2px 0 6px}
+.facts{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:13.5px;color:var(--muted)}
+.facts b{color:var(--ink);font-weight:500}
+.tags{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12.5px;background:var(--bg);border:1px solid var(--line);padding:2px 8px;border-radius:4px}
+.note{font-size:13px;color:var(--muted);margin-top:6px}
+.act{display:flex;flex-direction:column;gap:8px;align-items:stretch}
+.btn{display:block;text-align:center;font:inherit;font-size:14px;font-weight:600;text-decoration:none;padding:9px 12px;border-radius:6px;border:1px solid var(--line);color:var(--ink);background:var(--paper);cursor:pointer}
+.btn.primary{background:var(--sign);color:var(--sign-ink);border-color:var(--sign)}
+.btn.primary:hover{filter:brightness(1.08)}
+.status{font-size:12.5px;text-align:center}
+.status.v{color:var(--ok)} .status.c{color:var(--warn)} .status.h{color:var(--sign)}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+footer{background:var(--asphalt);color:#b9c0c6;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));font-size:14px;line-height:1.6;text-align:center}
+footer b{color:#f3f4f5;font-weight:600}
+@media (max-width:760px){
+  .row{grid-template-columns:1fr;gap:8px}
+  .code{padding:0}
+  .act{flex-direction:row}.act .btn{flex:1}
+  .meta{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Chỉ mục tạp chí Xây dựng - Giao thông</h1>
+    <p class="sub">Tra cứu nhanh các tạp chí khoa học trong nước thuộc lĩnh vực xây dựng, cầu đường, giao thông vận tải và thủy lợi, kèm đường dẫn nộp bài.</p>
+    <div class="searchbar">
+      <input id="q" type="search" placeholder="Tìm theo tên tạp chí, cơ quan, ISSN, chuyên ngành…" aria-label="Tìm kiếm">
+      <select id="lang" aria-label="Ngôn ngữ">
+        <option value="">Mọi ngôn ngữ</option><option value="Việt">Có tiếng Việt</option><option value="Anh">Có tiếng Anh</option>
+      </select>
+      <select id="sort" aria-label="Sắp xếp">
+        <option value="code">Sắp theo mã</option><option value="name">Sắp theo tên</option><option value="status">Link đã xác minh trước</option>
+      </select>
+    </div>
+  </div>
+  <div class="lane" aria-hidden="true"></div>
+</header>
+
+<main class="wrap">
+  <div class="toolbar" id="chips" role="group" aria-label="Lọc theo nhóm lĩnh vực"></div>
+  <div class="meta" style="margin-bottom:12px">
+    <span id="count"></span>
+    <span class="src"><span class="dot" id="dot"></span><span id="srcText">Đang tải…</span></span>
+    <button class="chip" id="reload" type="button">Tải lại dữ liệu</button>
+  </div>
+  <div class="list" id="list"></div>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <b>TS. Đặng Minh Tân</b><br>
+    Bộ môn Đường bộ - Sân bay, Khoa Công trình và Môi trường, Trường Đại học Giao thông vận tải
+  </div>
+</footer>
+
+<script>
+/* ===== CẤU HÌNH NGUỒN DỮ LIỆU (chỉ chủ trang chỉnh trong file này) =====
+   Dán link "Xuất bản lên web" của Google Sheet (định dạng CSV) vào SHEET_URL.
+   Cách lấy: Google Sheet > Tệp > Chia sẻ > Xuất bản lên web > chọn đúng trang tính
+   > định dạng "Giá trị được phân tách bằng dấu phẩy (.csv)" > Xuất bản > sao chép link.
+   Link này chỉ cho ĐỌC dữ liệu đã xuất bản, không lộ link chỉnh sửa của Sheet.
+   Người truy cập trang không thể đổi nguồn dữ liệu. */
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/1F6ihZAaCDhYeARCC7SsZT4bYkL5kxfc5fnzpTx1HcHs/edit?usp=sharing";
+
+/* Dữ liệu dự phòng (bản chụp CSDL ngày 2026-10-02) */
+const FALLBACK = [{"Mã": "TC01", "Tên tạp chí": "Tạp chí Khoa học Giao thông vận tải", "Tên tiếng Anh": "Transport and Communications Science Journal (TCSJ)", "Cơ quan xuất bản": "Trường Đại học Giao thông vận tải", "ISSN": "1859-2724", "Nhóm lĩnh vực": "Giao thông", "Chuyên ngành chính": "Cầu đường; Kỹ thuật giao thông; Vận tải; Cơ khí; Điện - tự động hóa", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://tcsj.utc.edu.vn/index.php/tcgtvt", "Link nộp bài": "https://tcsj.utc.edu.vn/index.php/tcgtvt/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Đã xác minh", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Nộp bài trực tuyến qua OJS"}, {"Mã": "TC02", "Tên tạp chí": "Journal of Science and Transport Technology (JSTT)", "Tên tiếng Anh": "Journal of Science and Transport Technology", "Cơ quan xuất bản": "Trường Đại học Công nghệ GTVT", "ISSN": "2734-9950", "Nhóm lĩnh vực": "Giao thông", "Chuyên ngành chính": "Quy hoạch và kỹ thuật giao thông; Công trình; Vật liệu; Logistics", "Ngôn ngữ": "Anh", "Chỉ mục / Xếp hạng": "Scopus (từ 2025); DM BKHCN 2026 - nhóm chỉ mục quốc tế", "Trang chủ": "https://vjol.info.vn/tckhcngiaothongvantai-eng", "Link nộp bài": "https://vjol.info.vn/tckhcngiaothongvantai-eng/about/submissions", "Email tòa soạn": "", "Phí đăng": "Không thu phí", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Kiểm tra thêm hệ thống nộp bài riêng của tạp chí (nếu có)"}, {"Mã": "TC03", "Tên tạp chí": "Tạp chí điện tử Khoa học và Công nghệ Giao thông", "Tên tiếng Anh": "Journal of Science and Transport Technology (bản tiếng Việt)", "Cơ quan xuất bản": "Trường Đại học Công nghệ GTVT", "ISSN": "2734-9942", "Nhóm lĩnh vực": "Giao thông", "Chuyên ngành chính": "Quy hoạch và kỹ thuật giao thông; Công trình xây dựng; Vật liệu xây dựng; Logistics", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "DM BKHCN 2026 - nhóm trong nước", "Trang chủ": "https://vjol.info.vn/tckhoahocvacongnghegiaothong", "Link nộp bài": "https://vjol.info.vn/tckhoahocvacongnghegiaothong/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC04", "Tên tạp chí": "Tạp chí Khoa học công nghệ Giao thông vận tải", "Tên tiếng Anh": "Journal of Transportation Science and Technology", "Cơ quan xuất bản": "Trường Đại học GTVT TP. Hồ Chí Minh", "ISSN": "1859-4263 (in); 3030-4261 (điện tử)", "Nhóm lĩnh vực": "Giao thông", "Chuyên ngành chính": "Giao thông vận tải; Hàng hải; Công trình; Cơ khí", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/ut", "Link nộp bài": "https://vjol.info.vn/ut/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC05", "Tên tạp chí": "Tạp chí Khoa học Công nghệ Xây dựng (ĐH Xây dựng Hà Nội)", "Tên tiếng Anh": "Journal of Science and Technology in Civil Engineering (JSTCE)", "Cơ quan xuất bản": "Trường Đại học Xây dựng Hà Nội", "ISSN": "1859-2996; 2734-9268 (điện tử)", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Kết cấu; Địa kỹ thuật; Vật liệu; Cầu đường; Quản lý xây dựng", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://stce.huce.edu.vn/index.php/en", "Link nộp bài": "https://stce.huce.edu.vn/index.php/en", "Email tòa soạn": "stce@huce.edu.vn", "Phí đăng": "", "Trạng thái link": "Đã xác minh", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Nộp bài trực tuyến"}, {"Mã": "TC06", "Tên tạp chí": "Tạp chí Khoa học công nghệ xây dựng (IBST)", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Viện Khoa học công nghệ xây dựng - Bộ Xây dựng", "ISSN": "1859-1566", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Kết cấu; Vật liệu; Nền móng; Công nghệ xây dựng", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "HĐGSNN 0-0,75 điểm (QĐ 22/QĐ-HĐGSNN, 2023)", "Trang chủ": "https://vjol.info.vn/tckhcnxaydung", "Link nộp bài": "https://vjol.info.vn/tckhcnxaydung/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "4 số/năm"}, {"Mã": "TC07", "Tên tạp chí": "Tạp chí Cầu đường Việt Nam", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Hội Khoa học kỹ thuật Cầu đường Việt Nam", "ISSN": "", "Nhóm lĩnh vực": "Giao thông", "Chuyên ngành chính": "Cầu; Đường; Hầm; Công trình thủy; Chuyển đổi số ngành cầu đường", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/tccauduongVietNam", "Link nộp bài": "https://vjol.info.vn/tccauduongVietNam/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Phản biện độc lập hai chiều"}, {"Mã": "TC08", "Tên tạp chí": "Tạp chí Người Xây dựng", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Tổng hội Xây dựng Việt Nam", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Khoa học công nghệ xây dựng; Kiến trúc; Quản lý xây dựng", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/tapchinguoixaydung", "Link nộp bài": "https://vjol.info.vn/tapchinguoixaydung/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Yêu cầu bản thẩm định chuyên môn theo quy định của tạp chí"}, {"Mã": "TC09", "Tên tạp chí": "Tạp chí Kinh tế xây dựng", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Viện Kinh tế xây dựng - Bộ Xây dựng", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Kinh tế xây dựng; Quản lý chi phí; BIM; Quản lý dự án", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/tapchikinhtexaydung", "Link nộp bài": "https://vjol.info.vn/tapchikinhtexaydung/about/submissions", "Email tòa soạn": "", "Phí đăng": "Không thu phí", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC10", "Tên tạp chí": "Tạp chí Khoa học Kiến trúc và Xây dựng", "Tên tiếng Anh": "Science Journal of Architecture & Construction", "Cơ quan xuất bản": "Trường Đại học Kiến trúc Hà Nội", "ISSN": "1859-350X", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Kiến trúc; Quy hoạch; Xây dựng; Hạ tầng đô thị", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/hau", "Link nộp bài": "https://vjol.info.vn/hau/about/submissions", "Email tòa soạn": "tapchikhoahoc-ktxd@hau.edu.vn", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "2 tháng/kỳ"}, {"Mã": "TC11", "Tên tạp chí": "Tạp chí Xây dựng và Đô thị", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Học viện Chiến lược, bồi dưỡng cán bộ xây dựng", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Xây dựng; Kiến trúc; Giao thông; Đô thị", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "", "Trang chủ": "https://vjol.info.vn/amc", "Link nộp bài": "https://vjol.info.vn/amc/vi/manuscript-process/index", "Email tòa soạn": "xddt@amc.edu.vn", "Phí đăng": "", "Trạng thái link": "Đã xác minh", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Nhận bài qua email"}, {"Mã": "TC12", "Tên tạp chí": "Tạp chí Khoa học Công nghệ Hàng hải", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Trường Đại học Hàng hải Việt Nam", "ISSN": "1859-316X", "Nhóm lĩnh vực": "Giao thông", "Chuyên ngành chính": "Hàng hải; Công trình thủy - cảng biển; Kinh tế hàng hải", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/vimaru", "Link nộp bài": "https://vjol.info.vn/vimaru/about/submissions", "Email tòa soạn": "jmst@vimaru.edu.vn", "Phí đăng": "Có thu phí với tác giả ngoài trường", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC13", "Tên tạp chí": "Tạp chí Khoa học kỹ thuật Thủy lợi và Môi trường", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Trường Đại học Thủy lợi", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Thủy lợi; Công trình giao thông; Xây dựng dân dụng; Môi trường", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/DHTL", "Link nộp bài": "https://vjol.info.vn/DHTL/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC14", "Tên tạp chí": "Tạp chí Khoa học và Công nghệ Thủy lợi", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Viện Khoa học Thủy lợi Việt Nam", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Thủy lợi; Thủy công; Phòng chống thiên tai", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/vawr", "Link nộp bài": "https://vjol.info.vn/vawr/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC15", "Tên tạp chí": "Tạp chí Khoa học và Kỹ thuật - Chuyên san Xây dựng công trình đặc biệt", "Tên tiếng Anh": "Journal of Science and Technique - Section on Special Construction Engineering (JST-SCE)", "Cơ quan xuất bản": "Học viện Kỹ thuật Quân sự (ĐH Kỹ thuật Lê Quý Đôn)", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Công trình ngầm; Sân bay; Cầu; Đường; Địa kỹ thuật; Trắc địa", "Ngôn ngữ": "Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjol.info.vn/LQDKTCT", "Link nộp bài": "https://vjol.info.vn/LQDKTCT/about/submissions", "Email tòa soạn": "sce@lqdtu.edu.vn", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Bài được chấp nhận gửi bản PDF và mã nguồn TeX qua email"}, {"Mã": "TC16", "Tên tạp chí": "Tạp chí Khoa học và Công nghệ Trường Đại học Xây dựng Miền Tây", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Trường Đại học Xây dựng Miền Tây", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Xây dựng; Kiến trúc; Hạ tầng", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "", "Trang chủ": "https://vjol.info.vn/mtu", "Link nộp bài": "https://vjol.info.vn/mtu/vi/Author_Guidelines", "Email tòa soạn": "editor@mtu.edu.vn", "Phí đăng": "", "Trạng thái link": "Đã xác minh", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Chỉ nhận bài trực tuyến; 6-10 trang A4"}, {"Mã": "TC17", "Tên tạp chí": "Tạp chí Khoa học Đại học Huế: Kỹ thuật và Công nghệ", "Tên tiếng Anh": "Hue University Journal of Science: Techniques and Technology", "Cơ quan xuất bản": "Đại học Huế", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Kiến trúc; Kết cấu và xây dựng; Vật liệu; Kỹ thuật", "Ngôn ngữ": "Anh, Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://jos.hueuni.edu.vn/index.php/HUJOS-TT", "Link nộp bài": "https://jos.hueuni.edu.vn/index.php/HUJOS-TT/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Xác minh trang chủ", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Truy cập mở"}, {"Mã": "TC18", "Tên tạp chí": "Tạp chí Khoa học và Công nghệ - Đại học Đà Nẵng", "Tên tiếng Anh": "The University of Danang - Journal of Science and Technology", "Cơ quan xuất bản": "Đại học Đà Nẵng", "ISSN": "1859-1531", "Nhóm lĩnh vực": "Đa ngành kỹ thuật", "Chuyên ngành chính": "Xây dựng; Giao thông; Cơ khí; Điện", "Ngôn ngữ": "Việt, Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://jst-ud.vn", "Link nộp bài": "https://jst-ud.vn", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Cần kiểm tra", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Kiểm tra link nộp bài trên trang chủ"}, {"Mã": "TC19", "Tên tạp chí": "Tạp chí Xây dựng (bản điện tử và bản giấy)", "Tên tiếng Anh": "", "Cơ quan xuất bản": "Bộ Xây dựng", "ISSN": "", "Nhóm lĩnh vực": "Xây dựng", "Chuyên ngành chính": "Xây dựng; Vật liệu; Kiến trúc; Quy hoạch; Giao thông", "Ngôn ngữ": "Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://tapchixaydung.vn", "Link nộp bài": "https://tapchixaydung.vn", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Cần kiểm tra", "Ngày kiểm tra": "2026-10-02", "Ghi chú": "Phát hành cả bản điện tử và bản giấy, thay cho Tạp chí Giao thông vận tải trước đây. Kiểm tra thể lệ và email nhận bài trên trang chủ"}, {"Mã": "TC20", "Tên tạp chí": "Vietnam Journal of Mechanics", "Tên tiếng Anh": "Vietnam Journal of Mechanics", "Cơ quan xuất bản": "Viện Hàn lâm KH&CN Việt Nam", "ISSN": "0866-7136", "Nhóm lĩnh vực": "Đa ngành kỹ thuật", "Chuyên ngành chính": "Cơ học kết cấu; Cơ học đất; Động lực học", "Ngôn ngữ": "Anh", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://vjs.ac.vn/index.php/vjmech", "Link nộp bài": "https://vjs.ac.vn/index.php/vjmech/about/submissions", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Cần kiểm tra", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}, {"Mã": "TC21", "Tên tạp chí": "Tạp chí Phát triển Khoa học và Công nghệ - Kỹ thuật và Công nghệ", "Tên tiếng Anh": "Science & Technology Development Journal - Engineering and Technology", "Cơ quan xuất bản": "Đại học Quốc gia TP. Hồ Chí Minh", "ISSN": "", "Nhóm lĩnh vực": "Đa ngành kỹ thuật", "Chuyên ngành chính": "Xây dựng; Giao thông; Kỹ thuật", "Ngôn ngữ": "Anh, Việt", "Chỉ mục / Xếp hạng": "Cần cập nhật theo DM BKHCN 2026", "Trang chủ": "https://stdjet.scienceandtechnology.com.vn", "Link nộp bài": "https://stdjet.scienceandtechnology.com.vn", "Email tòa soạn": "", "Phí đăng": "", "Trạng thái link": "Cần kiểm tra", "Ngày kiểm tra": "2026-10-02", "Ghi chú": ""}];
+
+const COLS = {code:"Mã",name:"Tên tạp chí",en:"Tên tiếng Anh",org:"Cơ quan xuất bản",issn:"ISSN",group:"Nhóm lĩnh vực",
+  field:"Chuyên ngành chính",lang:"Ngôn ngữ",index:"Chỉ mục / Xếp hạng",home:"Trang chủ",submit:"Link nộp bài",
+  email:"Email tòa soạn",fee:"Phí đăng",status:"Trạng thái link",checked:"Ngày kiểm tra",note:"Ghi chú"};
+
+let DATA = [], group = "";
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/đ/g,"d").replace(/Đ/g,"D").toLowerCase();
+const safeUrl = u => /^https?:\/\//i.test(String(u||"").trim()) ? String(u).trim() : "";
+
+function resolveSource(input){
+  const s = String(input||"").trim(); if(!s) return null;
+  let u; try{ u = new URL(s); }catch(e){ return null; }
+  if(u.protocol!=="https:" || u.hostname!=="docs.google.com" || !u.pathname.startsWith("/spreadsheets/d/")) return null;
+  if(u.pathname.startsWith("/spreadsheets/d/e/")){ u.searchParams.set("output","csv"); return u.toString(); } /* link Xuất bản lên web */
+  const id = (u.pathname.match(/^\/spreadsheets\/d\/([\w-]+)/)||[])[1];
+  const gid = u.searchParams.get("gid") || (u.hash.match(/gid=(\d+)/)||[])[1] || "0";
+  return id ? `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}` : null;
+}
+
+function parseCSV(text){
+  const rows=[]; let row=[], f="", q=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=""; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&text[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=""; }
+    else f+=c;
+  }
+  if(f!==""||row.length){ row.push(f); rows.push(row); }
+  const head = rows.shift()?.map(h=>h.trim()) || [];
+  return rows.filter(r=>r.some(x=>x.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||"").trim()])));
+}
+
+function setSource(online, text){
+  $("#dot").classList.toggle("on", online);
+  $("#srcText").textContent = text;
+}
+
+async function fetchData(){
+  const url = resolveSource(SHEET_URL);
+  if(!url){ DATA = FALLBACK; setSource(false, "Dữ liệu bản lưu sẵn (cập nhật 2026-10-02)"); return render(); }
+  setSource(false, "Đang tải dữ liệu…");
+  try{
+    const u = new URL(url); u.searchParams.set("_", Date.now());
+    const r = await fetch(u, {cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer"});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const txt = await r.text();
+    if(/^\s*</.test(txt)) throw new Error("not csv");
+    const rows = parseCSV(txt).slice(0, 2000);
+    if(!rows.length || !(COLS.name in rows[0])) throw new Error("bad header");
+    DATA = rows;
+    setSource(true, "Dữ liệu trực tuyến, cập nhật lúc " + new Date().toLocaleTimeString("vi-VN"));
+  }catch(e){
+    DATA = FALLBACK;
+    setSource(false, "Không tải được dữ liệu trực tuyến, đang dùng bản lưu sẵn");
+  }
+  render();
+}
+
+function buildChips(){
+  const groups = [...new Set(DATA.map(d=>d[COLS.group]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"vi"));
+  const box = $("#chips");
+  box.innerHTML = ["", ...groups].map(g=>`<button class="chip" type="button" data-g="${esc(g)}" aria-pressed="${g===group}">${g?esc(g):"Tất cả"} <span style="opacity:.6">${g?DATA.filter(d=>d[COLS.group]===g).length:DATA.length}</span></button>`).join("");
+  box.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{ group=b.dataset.g; render(); });
+}
+
+function statusClass(s){ const n=norm(s); return n.startsWith("da xac minh")?"v":n.startsWith("can")?"c":"h"; }
+
+function render(){
+  buildChips();
+  const q = norm($("#q").value).trim().split(/\s+/).filter(Boolean);
+  const lang = $("#lang").value;
+  let rows = DATA.filter(d=>{
+    if(group && d[COLS.group]!==group) return false;
+    if(lang && !String(d[COLS.lang]).includes(lang)) return false;
+    if(!q.length) return true;
+    const hay = norm(Object.values(d).join(" "));
+    return q.every(t=>hay.includes(t));
+  });
+  const s = $("#sort").value, rank={v:0,h:1,c:2};
+  rows.sort((a,b)=> s==="name" ? String(a[COLS.name]).localeCompare(b[COLS.name],"vi")
+    : s==="status" ? rank[statusClass(a[COLS.status])]-rank[statusClass(b[COLS.status])] || String(a[COLS.code]).localeCompare(b[COLS.code])
+    : String(a[COLS.code]).localeCompare(b[COLS.code],"vi",{numeric:true}));
+  $("#count").textContent = `${rows.length} / ${DATA.length} tạp chí`;
+  if(!rows.length){ $("#list").innerHTML = `<div class="empty">Không có tạp chí phù hợp. Thử bỏ bớt từ khóa hoặc bộ lọc.</div>`; return; }
+  $("#list").innerHTML = rows.map(d=>{
+    const sub=safeUrl(d[COLS.submit]), home=safeUrl(d[COLS.home]), mail=/^[^\s@<>"']+@[^\s@<>"']+\.[^\s@<>"']+$/.test(String(d[COLS.email]||"").trim()) ? String(d[COLS.email]).trim() : "";
+    const fields = String(d[COLS.field]||"").split(";").map(x=>x.trim()).filter(Boolean);
+    const fact=(k,v)=> v ? `<span>${k}: <b>${esc(v)}</b></span>` : "";
+    return `<article class="row">
+      <div class="code">${esc(d[COLS.code])}</div>
+      <div>
+        <h2 class="title">${esc(d[COLS.name])}</h2>
+        ${d[COLS.en]?`<div class="en">${esc(d[COLS.en])}</div>`:""}
+        <div class="facts">${fact("Cơ quan",d[COLS.org])}${fact("ISSN",d[COLS.issn])}${fact("Ngôn ngữ",d[COLS.lang])}${fact("Xếp hạng",d[COLS.index])}${fact("Phí",d[COLS.fee])}</div>
+        ${fields.length?`<div class="tags">${fields.map(f=>`<span class="tag">${esc(f)}</span>`).join("")}</div>`:""}
+        ${d[COLS.note]?`<div class="note">${esc(d[COLS.note])}</div>`:""}
+      </div>
+      <div class="act">
+        ${sub?`<a class="btn primary" href="${esc(sub)}" target="_blank" rel="noopener noreferrer">Nộp bài</a>`:""}
+        ${home?`<a class="btn" href="${esc(home)}" target="_blank" rel="noopener noreferrer">Trang chủ</a>`:""}
+        ${mail?`<a class="btn" href="mailto:${esc(mail)}">${esc(mail)}</a>`:""}
+        ${d[COLS.status]?`<div class="status ${statusClass(d[COLS.status])}">${esc(d[COLS.status])}${d[COLS.checked]?` (${esc(d[COLS.checked])})`:""}</div>`:""}
+      </div>
+    </article>`;
+  }).join("");
+}
+
+["#q","#lang","#sort"].forEach(s=>$(s).addEventListener("input",render));
+$("#reload").onclick = fetchData;
+fetchData();
+</script>
+</body>
+</html>
