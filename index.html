@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://docs.google.com https://*.googleusercontent.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://gc.zgo.at; style-src 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://docs.google.com https://script.google.com https://*.googleusercontent.com https://*.goatcounter.com; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Chỉ mục tạp chí Xây dựng - Giao thông Việt Nam</title>
@@ -60,6 +60,7 @@ main{padding:18px 20px 40px}
 .empty{padding:40px;text-align:center;color:var(--muted)}
 footer{background:var(--asphalt);color:#b9c0c6;padding:22px 20px calc(22px + env(safe-area-inset-bottom,0px));font-size:14px;line-height:1.6;text-align:center}
 footer b{color:#f3f4f5;font-weight:600}
+.visits{margin-top:10px;font-size:13px;color:#98a1a8}
 @media (max-width:760px){
   .row{grid-template-columns:1fr;gap:8px}
   .code{padding:0}
@@ -102,6 +103,7 @@ footer b{color:#f3f4f5;font-weight:600}
   <div class="wrap">
     <b>TS. Đặng Minh Tân</b><br>
     Bộ môn Đường bộ - Sân bay, Khoa Công trình và Môi trường, Trường Đại học Giao thông vận tải
+    <div class="visits" id="visits" hidden>Lượt truy cập: <b id="visitCount">…</b></div>
   </div>
 </footer>
 
@@ -128,10 +130,10 @@ function resolveSource(input){
   const s = String(input||"").trim(); if(!s) return null;
   let u; try{ u = new URL(s); }catch(e){ return null; }
   if(u.protocol!=="https:" || u.hostname!=="docs.google.com" || !u.pathname.startsWith("/spreadsheets/d/")) return null;
-  if(u.pathname.startsWith("/spreadsheets/d/e/")){ u.searchParams.set("output","csv"); return u.toString(); } /* link Xuất bản lên web */
+  if(u.pathname.startsWith("/spreadsheets/d/e/")){ u.pathname = u.pathname.replace(/\/pubhtml$/,"/pub"); u.searchParams.set("output","csv"); return u.toString(); } /* link Xuất bản lên web */
   const id = (u.pathname.match(/^\/spreadsheets\/d\/([\w-]+)/)||[])[1];
   const gid = u.searchParams.get("gid") || (u.hash.match(/gid=(\d+)/)||[])[1] || "0";
-  return id ? `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&gid=${gid}` : null;
+  return id ? `https://docs.google.com/spreadsheets/d/${id}/gviz/tq?tqx=out:csv&headers=1&gid=${gid}` : null;
 }
 
 function parseCSV(text){
@@ -145,7 +147,10 @@ function parseCSV(text){
     else f+=c;
   }
   if(f!==""||row.length){ row.push(f); rows.push(row); }
-  const head = rows.shift()?.map(h=>h.trim()) || [];
+  let hi = rows.findIndex(r=>r.some(x=>x.trim()===COLS.name));
+  if(hi < 0) hi = 0;
+  rows.splice(0, hi);
+  const head = rows.shift()?.map(h=>h.trim().replace(/^\uFEFF/,"")) || [];
   return rows.filter(r=>r.some(x=>x.trim())).map(r=>Object.fromEntries(head.map((h,i)=>[h,(r[i]||"").trim()])));
 }
 
@@ -162,15 +167,23 @@ async function fetchData(){
     const u = new URL(url); u.searchParams.set("_", Date.now());
     const r = await fetch(u, {cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer"});
     if(!r.ok) throw new Error("HTTP " + r.status);
-    const txt = await r.text();
+    const txt = (await r.text()).replace(/^\uFEFF/,"");
     if(/^\s*</.test(txt)) throw new Error("not csv");
     const rows = parseCSV(txt).slice(0, 2000);
     if(!rows.length || !(COLS.name in rows[0])) throw new Error("bad header");
     DATA = rows; LOADED = true;
     setSource(true, "Dữ liệu trực tuyến, cập nhật lúc " + new Date().toLocaleTimeString("vi-VN"));
   }catch(e){
+    console.warn("Tải dữ liệu thất bại:", e && e.message);
     DATA = []; LOADED = false;
-    setSource(false, "Không tải được dữ liệu trực tuyến");
+    let why = "";
+    try{
+      if(new URLSearchParams(location.search).has("debug")){
+        const m = String(e && e.message || e);
+        why = " [" + m + (/Failed to fetch|NetworkError|Load failed/i.test(m) ? " - thường do Sheet chưa chia sẻ công khai hoặc chưa Xuất bản lên web" : /not csv/.test(m) ? " - Google trả về trang web thay vì CSV, kiểm tra quyền chia sẻ" : /bad header/.test(m) ? " - không thấy cột Tên tạp chí, kiểm tra dòng tiêu đề và đúng trang tính" : "") + "]";
+      }
+    }catch(_){}
+    setSource(false, "Không tải được dữ liệu trực tuyến" + why);
   }
   render();
 }
@@ -224,9 +237,53 @@ function render(){
   }).join("");
 }
 
+/* ===== BỘ ĐẾM TRUY CẬP (GoatCounter, miễn phí, không dùng cookie) =====
+   Đăng ký tại goatcounter.com, lấy "code" (phần trước .goatcounter.com) và điền vào đây.
+   Để trống thì bộ đếm không hiển thị. */
+const GOATCOUNTER_CODE = "";
+
+/* ===== BỘ ĐẾM GHI VÀO GOOGLE SHEET (Apps Script) =====
+   Dán URL ứng dụng web (dạng https://script.google.com/macros/s/.../exec) vào COUNTER_URL.
+   Hướng dẫn trong file bo_dem_apps_script.gs. Nếu điền, bộ đếm này được ưu tiên hơn GoatCounter.
+   Mỗi phiên trình duyệt chỉ tính 1 lượt, tải lại trang không cộng thêm. */
+const COUNTER_URL = "";
+
+function sheetCounter(){
+  let u; try{ u = new URL(COUNTER_URL.trim()); }catch(e){ return false; }
+  if(u.protocol!=="https:" || u.hostname!=="script.google.com" || !u.pathname.startsWith("/macros/s/")) return false;
+  let counted = false;
+  try{ counted = sessionStorage.getItem("visit_counted")==="1"; }catch(e){}
+  u.searchParams.set("action", counted ? "get" : "hit");
+  fetch(u, {cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer"})
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(j => {
+      try{ sessionStorage.setItem("visit_counted","1"); }catch(e){}
+      const n = Number(j.count);
+      if(Number.isFinite(n)){ $("#visitCount").textContent = n.toLocaleString("vi-VN"); $("#visits").hidden = false; }
+    }).catch(() => {});
+  return true;
+}
+
+function initCounter(){
+  if(COUNTER_URL.trim() && sheetCounter()) return;
+  const code = GOATCOUNTER_CODE.trim();
+  if(!/^[a-z0-9-]{2,40}$/i.test(code)) return;
+  const s = document.createElement("script");
+  s.async = true;
+  s.src = "https://gc.zgo.at/count.js";
+  s.dataset.goatcounter = `https://${code}.goatcounter.com/count`;
+  document.head.appendChild(s);
+  const show = () => fetch(`https://${code}.goatcounter.com/counter/TOTAL.json`, {cache:"no-store", credentials:"omit", referrerPolicy:"no-referrer"})
+    .then(r => r.ok ? r.json() : Promise.reject())
+    .then(j => { const n = String(j.count || "").replace(/[^\d\s.,]/g,"").trim(); if(n){ $("#visitCount").textContent = n; $("#visits").hidden = false; } })
+    .catch(() => {});
+  s.addEventListener("load", () => setTimeout(show, 1200));
+}
+
 ["#q","#lang","#sort"].forEach(s=>$(s).addEventListener("input",render));
 $("#reload").onclick = fetchData;
 fetchData();
+initCounter();
 </script>
 </body>
 </html>
